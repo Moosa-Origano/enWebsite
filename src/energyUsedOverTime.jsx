@@ -1,4 +1,4 @@
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 export default function LineGraph({ totalEnergyConsumed, energyExported, renewablesGenerated, data }) {
 
@@ -6,8 +6,8 @@ export default function LineGraph({ totalEnergyConsumed, energyExported, renewab
   console.log("DATA" , data)
   
   return (
-    <ResponsiveContainer width="100%" height={300}>
-      <LineChart
+    <ResponsiveContainer width="50%" height={300}>
+      <BarChart
         width={500}
         height={300}
         data={data}
@@ -28,20 +28,16 @@ export default function LineGraph({ totalEnergyConsumed, energyExported, renewab
         <YAxis />
         <Tooltip />
         <Legend />
-        <Line 
-          type="monotone" 
+        <Bar 
           dataKey="Total energy consumption (kWh)" 
-          stroke="#8884d8" 
-          activeDot={{ r: 8 }} 
-          name="Energy Consumed"
+          fill="#8884d8" 
         />
-        <Line 
-          type="monotone" 
+        {/* <Bar 
           dataKey="Total renewable energy generated onsite or offsite (kWh)" 
-          stroke="#82ca9d" 
+          fill="#82ca9d" 
           name="Renewables Generated"
-        />
-      </LineChart>
+        /> */}
+      </BarChart>
     </ResponsiveContainer>
   );
 }
