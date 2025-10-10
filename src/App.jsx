@@ -17,13 +17,19 @@ function App() {
         const parsed = Papa.parse(csvText, { header: true, dynamicTyping: true });
     
         const filtered = parsed.data
-        .filter(row => wantedUniversities.includes(row["HE provider"]))
-        .map(row => ({
-          "HE provider": row["HE provider"],  
-          ...(showTotalEnergy && { "Total energy consumption (kWh)": row["Total energy consumption (kWh)"] }), // if false then it isn't added
-          ...(showExported && { "Total generation of electricity exported to grid (kWh)": row["Total generation of electricity exported to grid (kWh)"] }),
-          ...(showRenewables && { "Total renewable energy generated onsite or offsite (kWh)": row["Total renewable energy generated onsite or offsite (kWh)"] })
-        }))
+          .filter(row => wantedUniversities.includes(row["HE provider"]))
+          .map(row => ({
+            "HE provider": row["HE provider"],  
+            ...(showTotalEnergy && { 
+              "Total energy consumption (kWh)": parseFloat(row["Total energy consumption (kWh)"].split(',').join(''))
+            }),
+            ...(showExported && { 
+              "Total generation of electricity exported to grid (kWh)": parseFloat(row["Total generation of electricity exported to grid (kWh)"].split(',').join(''))
+            }),
+            ...(showRenewables && { 
+              "Total renewable energy generated onsite or offsite (kWh)": parseFloat(row["Total renewable energy generated onsite or offsite (kWh)"].split(',').join(''))
+            })
+          }))
 
         //console.log("Filtered: " , filtered); // filtered[0]['HE provider']
         setData(filtered); 
