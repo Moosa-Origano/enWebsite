@@ -19,7 +19,7 @@ function App() {
         const filtered = parsed.data
           .filter(row => wantedUniversities.includes(row["HE provider"]))
           .map(row => ({
-            "HE provider": row["HE provider"],  
+            "HE provider": row["HE provider"].replace('the', '').replace('University', '').replace('of', '').replace('College', '').replace('Science, Technology and Medicine', '').replace('The', ''),  
             ...(showTotalEnergy && { 
               "Total energy consumption (kWh)": parseFloat(row["Total energy consumption (kWh)"].split(',').join(''))
             }),
