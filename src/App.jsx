@@ -25,12 +25,13 @@ function App() {
           ...(showRenewables && { "Total renewable energy generated onsite or offsite (kWh)": row["Total renewable energy generated onsite or offsite (kWh)"] })
         }))
 
-        console.log(filtered);
+        //console.log("Filtered: " , filtered); // filtered[0]['HE provider']
         setData(filtered); 
       })
       .catch((err) => console.error("Error loading CSV:", err));
   }, []);
 
+  console.log("Data", data)
 
   return (
     <>
@@ -47,7 +48,7 @@ function App() {
       <label htmlFor="renewables">Renewable Energy Generated</label>
       <input id="renewables" checked ={showRenewables} type='checkbox' onChange={(e) => setShowRenewables(e.target.checked)}></input>
 
-      <LineGraph></LineGraph>
+      <LineGraph totalEnergyConsumed = {showTotalEnergy} energyExported = {showExported} renewablesGenerated = {showRenewables} data = {data} ></LineGraph>
     </>
   )
 }
