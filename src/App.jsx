@@ -99,7 +99,8 @@ function App() {
       <input placeholder='University List' type="text"></input>
       <br></br>
 
-      <label htmlFor="totalE">Total Energy Consumed</label>
+      {/* Maybe change these to radio buttons so only one is rendered at a time? No scrolling needed and less complicated. Then change the conditional rendering above to else if statements so only one set of data is added. Add parameter in the functions for graph title so only 2 functions total are needed and can create the graphs.  */}
+      <label htmlFor="totalE">Total Energy Consumed</label> 
       <input id="totalE" checked ={showTotalEnergy} type='checkbox' onChange={(e) => setShowTotalEnergy(e.target.checked)}></input>
 
       <label htmlFor="exported">Energy Exported to Grid</label>
