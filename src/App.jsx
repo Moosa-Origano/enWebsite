@@ -69,12 +69,12 @@ function App() {
               if (showTotalEnergy) {
                 yearData[shortName] = parseFloat(row["Total energy consumption (kWh)"].split(',').join(''));
               }
-              if (showExported) {
-                yearData[shortName + ' Exported'] = parseFloat(row["Total generation of electricity exported to grid (kWh)"].split(',').join(''));
-              }
-              if (showRenewables) {
-                yearData[shortName + ' Renewables'] = parseFloat(row["Total renewable energy generated onsite or offsite (kWh)"].split(',').join(''));
-              }
+              // if (showExported) { // i dont think these should be in here now that I think about it..
+              //   yearData[shortName + ' Exported'] = parseFloat(row["Total generation of electricity exported to grid (kWh)"].split(',').join(''));
+              // }
+              // if (showRenewables) {
+              //   yearData[shortName + ' Renewables'] = parseFloat(row["Total renewable energy generated onsite or offsite (kWh)"].split(',').join(''));
+              // }
             });
           
           allYearsData.push(yearData);
@@ -131,7 +131,8 @@ function App() {
       </div>
 
 
-      <BarGraph totalEnergyConsumed = {showTotalEnergy} energyExported = {showExported} renewablesGenerated = {showRenewables} data = {data} ></BarGraph>
+      {viewMode === 'single' && <BarGraph totalEnergyConsumed = {showTotalEnergy} energyExported = {showExported} renewablesGenerated = {showRenewables} data = {data} ></BarGraph>}
+      {viewMode === 'trend' && <TrendGraph data = {trendData} ></TrendGraph>}
     </>
   )
 }

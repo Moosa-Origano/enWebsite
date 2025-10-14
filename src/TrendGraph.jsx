@@ -2,11 +2,11 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 
 export default function TrendGraph({ data }) {
   // {year: 2015, Edinburgh: 123456, Oxford: 234567, ...}
-  
+  console.log("Trend Graph called")
   // All uni names without year.
   let universities = [];
 
-  if (data.length > 0) { // remove year from each record
+  if (data.length > 0) { // remove year from each record 
     for (const key in data[0]) {
       if (key !== 'year') {
         universities.push(key);
@@ -14,6 +14,7 @@ export default function TrendGraph({ data }) {
     }
   }
 
+  console.log('UNIVERSITIES: ' ,  data)
   
 
   const colors = ['#8884d8', '#82ca9d', '#ffc658', '#ff7c7c', '#8dd1e1', '#d084d0', '#a4de6c', '#ffa07a']; // need to add more colours otherwise will cause an error below
