@@ -1,12 +1,12 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
-export default function LineGraph({ totalEnergyConsumed, energyExported, renewablesGenerated, data }) {
+export default function BarGraph({ totalEnergyConsumed, energyExported, renewablesGenerated, data }) {
 
   console.log(totalEnergyConsumed)
   console.log("DATA" , data)
   
   return (
-    <ResponsiveContainer width="50%" height={300}>
+    <ResponsiveContainer width="100%" height={300}>
       <BarChart
         width={500}
         height={300}

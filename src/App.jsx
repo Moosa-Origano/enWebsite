@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Papa from "papaparse";
-import LineGraph from "./energyUsedOverTime";
+import BarGraph from "./energyUsedOverTime";
 import TrendGraph from './TrendGraph'
 
 
@@ -14,26 +14,28 @@ function App() {
   const [trendData, setTrendData] = useState([])
   const [viewMode, setViewMode] = useState('single') 
 
+
+  // Single year choose data. 
   useEffect(() => {
-    if (viewMode !== 'trend') { return } // only produce this data when the option is selected
+    if (viewMode !== 'single') { return } // only produce this data when the option is selected
 
     fetch(`/energyData/20${year}-${year+1}.csv`)
       .then((response) => response.text())
       .then((csvText) => {
-        const parsed = Papa.parse(csvText, { header: true, dynamicTyping: true });
+        const parsed = Papa.parse(csvText, { header: true, dynamicTyping: true })
     
         const filtered = parsed.data
           .filter(row => wantedUniversities.includes(row["HE provider"]))
           .map(row => ({
-            "HE provider": row["HE provider"].replace('the', '').replace('University', '').replace('of', '').replace('College', '').replace('Science, Technology and Medicine', '').replace('The', ''),  
+            "HE provider": row["HE provider"].replace('the', '').replace('University', '').replace('of', '').replace('College', '').replace('Science, Technology and Medicine', '').replace('The', '').trim(),  
             ...(showTotalEnergy && { 
-              "Total energy consumption (kWh)": parseFloat(row["Total energy consumption (kWh)"].split(',').join(''))
+              "Total energy consumption (kWh)": parseFloat(row["Total energy consumption (kWh)"].split(',').join('').trim())
             }),
             ...(showExported && { 
-              "Total generation of electricity exported to grid (kWh)": parseFloat(row["Total generation of electricity exported to grid (kWh)"].split(',').join(''))
+              "Total generation of electricity exported to grid (kWh)": parseFloat(row["Total generation of electricity exported to grid (kWh)"].split(',').join('').trim())
             }),
             ...(showRenewables && { 
-              "Total renewable energy generated onsite or offsite (kWh)": parseFloat(row["Total renewable energy generated onsite or offsite (kWh)"].split(',').join(''))
+              "Total renewable energy generated onsite or offsite (kWh)": parseFloat(row["Total renewable energy generated onsite or offsite (kWh)"].split(',').join('').trim())
             })
           }))
 
@@ -44,9 +46,50 @@ function App() {
   }, [year, showTotalEnergy, showExported, showRenewables]); // dependencies for rerender
 
   useEffect(() => {
-    if (viewMode !== 'trend') { return }
-  }
-  )
+    if (viewMode !== 'trend') return;
+    
+    console.log("View Mode: ", viewMode)
+    const years = [15, 16, 17, 18, 19, 20, 21, 22, 23];
+    const allYearsData = [];
+    let completed = 0;
+    
+    years.forEach(y => {
+      fetch(`/energyData/20${y}-${y+1}.csv`)
+        .then((response) => response.text())
+        .then((csvText) => {
+          const parsed = Papa.parse(csvText, { header: true, dynamicTyping: true });
+      
+          const yearData = { year: 2000 + y };
+          
+          parsed.data
+            .filter(row => wantedUniversities.includes(row["HE provider"]))
+            .forEach(row => {
+              const shortName = row["HE provider"].replace('the', '').replace('University', '').replace('of', '').replace('College', '').replace('Science, Technology and Medicine', '').replace('The', '');
+
+              if (showTotalEnergy) {
+                yearData[shortName] = parseFloat(row["Total energy consumption (kWh)"].split(',').join(''));
+              }
+              if (showExported) {
+                yearData[shortName + ' Exported'] = parseFloat(row["Total generation of electricity exported to grid (kWh)"].split(',').join(''));
+              }
+              if (showRenewables) {
+                yearData[shortName + ' Renewables'] = parseFloat(row["Total renewable energy generated onsite or offsite (kWh)"].split(',').join(''));
+              }
+            });
+          
+          allYearsData.push(yearData);
+          completed++;
+          
+          // When all years are loaded, sort and set state
+          if (completed === years.length) {
+            allYearsData.sort((a, b) => a.year - b.year);
+            setTrendData(allYearsData);
+            console.log("Trend Data: ", trendData)
+          }
+        })
+        .catch((err) => console.error("Error loading CSV:", err));
+    });
+  }, [showTotalEnergy, showExported, showRenewables, viewMode]);
 
   console.log("Data", data)
 
@@ -74,7 +117,21 @@ function App() {
         </select>
       </div>
 
-      <LineGraph totalEnergyConsumed = {showTotalEnergy} energyExported = {showExported} renewablesGenerated = {showRenewables} data = {data} ></LineGraph>
+      <br></br>
+      <div>
+        <div>
+          <input type="radio" id="singleView" name="viewMode" value="single" checked={viewMode === 'single'} onChange={(e) => setViewMode(e.target.value)}/>
+          <label htmlFor="singleView">Single Year View</label>
+        </div>
+
+        <div>
+          <input type="radio" id="trendView" name="viewMode" value="trend" checked={viewMode === 'trend'} onChange={(e) => setViewMode(e.target.value)}/>
+          <label htmlFor="trendView">Trend View (2015-2023)</label>
+        </div>
+      </div>
+
+
+      <BarGraph totalEnergyConsumed = {showTotalEnergy} energyExported = {showExported} renewablesGenerated = {showRenewables} data = {data} ></BarGraph>
     </>
   )
 }
