@@ -35,7 +35,7 @@ function App() {
         setData(filtered); 
       })
       .catch((err) => console.error("Error loading CSV:", err));
-  }, []);
+  }, [year, showTotalEnergy, showExported, showRenewables]); // dependencies for rerender
 
   console.log("Data", data)
 
