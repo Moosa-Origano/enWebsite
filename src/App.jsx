@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import Papa from "papaparse";
 import LineGraph from "./energyUsedOverTime";
+import TrendGraph from './TrendGraph'
+
 
 function App() {
   const [data, setData] = useState([])
@@ -9,8 +11,12 @@ function App() {
   const [showExported, setShowExported] = useState(false)
   const [showRenewables, setShowRenewables] = useState (true)
   const [year, setYear] = useState (15)
+  const [trendData, setTrendData] = useState([])
+  const [viewMode, setViewMode] = useState('single') 
 
   useEffect(() => {
+    if (viewMode !== 'trend') { return } // only produce this data when the option is selected
+
     fetch(`/energyData/20${year}-${year+1}.csv`)
       .then((response) => response.text())
       .then((csvText) => {
@@ -37,6 +43,11 @@ function App() {
       .catch((err) => console.error("Error loading CSV:", err));
   }, [year, showTotalEnergy, showExported, showRenewables]); // dependencies for rerender
 
+  useEffect(() => {
+    if (viewMode !== 'trend') { return }
+  }
+  )
+
   console.log("Data", data)
 
   return (
@@ -53,6 +64,15 @@ function App() {
 
       <label htmlFor="renewables">Renewable Energy Generated</label>
       <input id="renewables" checked ={showRenewables} type='checkbox' onChange={(e) => setShowRenewables(e.target.checked)}></input>
+
+      <div>
+        <label htmlFor="year">Select Year: </label>
+        <select id="year" value={year} onChange={(e) => setYear(parseInt(e.target.value))}>
+          {[15, 16, 17, 18, 19, 20, 21, 22, 23].map(y => (
+            <option key={y} value={y}>20{y}-{y+1}</option>
+          ))}
+        </select>
+      </div>
 
       <LineGraph totalEnergyConsumed = {showTotalEnergy} energyExported = {showExported} renewablesGenerated = {showRenewables} data = {data} ></LineGraph>
     </>
