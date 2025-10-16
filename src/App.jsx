@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Papa from "papaparse";
 import BarGraph from "./energyUsedOverTime";
 import TrendGraph from './TrendGraph'
+import UniListSearch from "./uniList";
 
 
 function App() {
@@ -94,7 +95,7 @@ function App() {
   return (
     <>
       <h1>Energy Consumption of Universities</h1>
-      <input placeholder='University List' type="text"></input>
+      <UniListSearch/>    
       <br></br>
 
       {/* Maybe change these to radio buttons so only one is rendered at a time? No scrolling needed and less complicated. Then change the conditional rendering above to else if statements so only one set of data is added. Add parameter in the functions for graph title so only 2 functions total are needed and can create the graphs.  */}
@@ -163,6 +164,7 @@ function App() {
 
       {viewMode === 'single' && 
       <div>
+        
       <h2>Energy Consumption of Universities (kWh) {`(20${year}-20${year+1})`}</h2>
       <BarGraph totalEnergyConsumed = {showTotalEnergy} energyExported = {showExported} renewablesGenerated = {showRenewables} data = {data} ></BarGraph>
       </div>
