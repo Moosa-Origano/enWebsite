@@ -18,7 +18,6 @@ function App() {
   // Single year choose data. 
   useEffect(() => {
     if (viewMode !== 'single') { return } // only produce this data when the option is selected
-
     fetch(`/energyData/20${year}-${year+1}.csv`)
       .then((response) => response.text())
       .then((csvText) => {
@@ -52,7 +51,6 @@ function App() {
     const years = [15, 16, 17, 18, 19, 20, 21, 22, 23];
     const allYearsData = [];
     let completed = 0;
-    
     years.forEach(y => {
       fetch(`/energyData/20${y}-${y+1}.csv`)
         .then((response) => response.text())
@@ -110,13 +108,44 @@ function App() {
       <input id="renewables" checked ={showRenewables} type='checkbox' onChange={(e) => setShowRenewables(e.target.checked)}></input>
 
       <div>
+        <input name = "yearSelect" id='15' type='radio' value={year} onChange={(e) => setYear(15)}></input>
+        <label htmlFor="15">2015-16</label>
+
+        <input name = "yearSelect" id='16' type='radio' value={year} onChange={(e) => setYear(16)}></input>
+        <label htmlFor="16">2016-17</label>
+
+        <input name = "yearSelect" id='17' type='radio' value={year} onChange={(e) => setYear(17)}></input>
+        <label htmlFor="17">2017-18</label>
+
+        <input name = "yearSelect" id='18' type='radio' value={year} onChange={(e) => setYear(18)}></input>
+        <label htmlFor="18">2018-19</label>
+
+        <input name = "yearSelect" id='19' type='radio' value={year} onChange={(e) => setYear(19)}></input>
+        <label htmlFor="19">2019-20</label>
+
+        <input name = "yearSelect" id='20' type='radio' value={year} onChange={(e) => setYear(20)}></input>
+        <label htmlFor="20">2020-21</label>
+
+        <input name = "yearSelect" id='21' type='radio' value={year} onChange={(e) => setYear(21)}></input>
+        <label htmlFor="21">2021-22</label>
+
+        <input name = "yearSelect" id='22' type='radio' value={year} onChange={(e) => setYear(22)}></input>
+        <label htmlFor="22">2022-23</label>
+
+        <input name = "yearSelect" id='23' type='radio' value={year} onChange={(e) => setYear(23)}></input>
+        <label htmlFor="23">2023-24</label>
+
+      </div>  
+
+{/* 
+      <div> // alternative view with list instead of separate radio buttons
         <label htmlFor="year">Select Year: </label>
         <select id="year" value={year} onChange={(e) => setYear(parseInt(e.target.value))}>
           {[15, 16, 17, 18, 19, 20, 21, 22, 23].map(y => (
             <option key={y} value={y}>20{y}-{y+1}</option>
           ))}
         </select>
-      </div>
+      </div> */}
 
       <br></br>
       <div>
@@ -132,10 +161,17 @@ function App() {
       </div>
 
 
-      {viewMode === 'single' && <BarGraph totalEnergyConsumed = {showTotalEnergy} energyExported = {showExported} renewablesGenerated = {showRenewables} data = {data} ></BarGraph>}
+      {viewMode === 'single' && 
+      <div>
+      <h2>Energy Consumption of Universities (kWh) {`(20${year}-20${year+1})`}</h2>
+      <BarGraph totalEnergyConsumed = {showTotalEnergy} energyExported = {showExported} renewablesGenerated = {showRenewables} data = {data} ></BarGraph>
+      </div>
+      }
+      
+
       {viewMode === 'trend' && <TrendGraph data = {trendData} ></TrendGraph>}
     </>
   )
-}
+} 
 
 export default App
