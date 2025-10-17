@@ -4,6 +4,8 @@ import BarGraph from "./energyUsedOverTime";
 import TrendGraph from './TrendGraph'
 import UniListSearch from "./uniList";
 
+import "./styles/App.css"
+
 
 function App() {
   const [data, setData] = useState([])
@@ -96,8 +98,12 @@ function App() {
   return (
     <>
       <h1>Energy Consumption of Universities</h1>
-      <UniListSearch wantedUniversities={wantedUniversities} setWantedUniversities={setWantedUniversities}/>    
-      <br></br>
+      <UniListSearch wantedUniversities={wantedUniversities} setWantedUniversities={setWantedUniversities}/>      
+
+      <div>
+      {wantedUniversities.map(uni =><div className="removeUniversities" key={uni}>{uni}<button class ="removeUniversitiesButton" onClick = {() => setWantedUniversities(wantedUniversities.filter(uniName => uniName !== uni))}>x</button> </div> )}
+      </div>
+
 
       {/* Maybe change these to radio buttons so only one is rendered at a time? No scrolling needed and less complicated. Then change the conditional rendering above to else if statements so only one set of data is added. Add parameter in the functions for graph title so only 2 functions total are needed and can create the graphs.  */}
       <label htmlFor="totalE">Total Energy Consumed</label> 
