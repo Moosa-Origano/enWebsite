@@ -45,6 +45,7 @@ function App() {
       .catch((err) => console.error("Error loading CSV:", err));
   }, [year, showTotalEnergy, showExported, showRenewables, wantedUniversities]); // dependencies for rerender
 
+  // Multi year data 
   useEffect(() => {
     if (viewMode !== 'trend') return; 
     
