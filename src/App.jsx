@@ -22,7 +22,7 @@ function App() {
     fetch(`/energyData/20${year}-${year+1}.csv`)
       .then((response) => response.text())
       .then((csvText) => {
-        const parsed = Papa.parse(csvText, { header: true, dynamicTyping: true })
+        const parsed = Papa.parse(csvText, { header: true })
     
         const filtered = parsed.data
           .filter(row => wantedUniversities.includes(row["HE provider"]))

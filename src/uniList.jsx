@@ -167,12 +167,12 @@ import { useState } from 'react'
 
 
 export default function UniListSearch( { wantedUniversities, setWantedUniversities }) {
-  const [characters, setCharacters] = useState("obugobwgeo")
+  const [characters, setCharacters] = useState("")
   console.log(wantedUniversities)
 
   return (
     <div>
-      <input type="text" id="myInput"  placeholder="Search for names.." onChange={(e) => {if (e.target.value === "") {setCharacters("eiugvsu")} else{ setCharacters(e.target.value)}}}></input>
+      <input type="text" id="myInput"  placeholder="Search for names.." onChange={(e) => setCharacters(e.target.value)}></input>
 
       <ul id='myUL' placeholder = 'Search for names... '>
         {universities.filter(university => university.includes(characters)).map((university, index) => <li key={index} onClick={() => { if (wantedUniversities.includes(university) === false) {setWantedUniversities([...wantedUniversities, university]);}}  } >{university}</li>)}
