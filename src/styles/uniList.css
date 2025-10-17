@@ -1,0 +1,32 @@
+#myInput {
+  width: 90%;
+  padding: 10px;
+  font-size: 16px;
+}
+
+#myUL {
+    height: 200px;
+    overflow:hidden; 
+    overflow-y:scroll;
+    padding: 0px;
+}   
+
+#myUL li {
+    list-style-type: none;
+    border-width: 1px;
+    outline: 1px solid;
+    margin-top: 1px;
+    margin-left: 1px;
+    font: bold;
+    font-size: 17px;
+    padding-left: 0px;
+    background-color: #fffefe;
+    padding: 5px;
+    width: 90%;
+}
+
+#myUL li:hover {
+    background-color: #e6e3e3;
+
+
+}

@@ -7,7 +7,7 @@ import UniListSearch from "./uniList";
 
 function App() {
   const [data, setData] = useState([])
-  const [wantedUniversities, setWantedUniversities] = useState(["The University of Edinburgh", "The University of Oxford","The University of Cambridge", "University College London", "Imperial College of Science, Technology and Medicine", "The University of Manchester", "King's College London", "The University of Warwick"])
+  const [wantedUniversities, setWantedUniversities] = useState ([])//(["The University of Edinburgh", "The University of Oxford","The University of Cambridge", "University College London", "Imperial College of Science, Technology and Medicine", "The University of Manchester", "King's College London", "The University of Warwick"])
   const [showTotalEnergy, setShowTotalEnergy] = useState(true)
   const [showExported, setShowExported] = useState(false)
   const [showRenewables, setShowRenewables] = useState (true)
@@ -39,14 +39,14 @@ function App() {
             })
           }))
 
-        //console.log("Filtered: " , filtered); // filtered[0]['HE provider']
+        console.log("Filtered: " , filtered); // filtered[0]['HE provider']
         setData(filtered); 
       })
       .catch((err) => console.error("Error loading CSV:", err));
-  }, [year, showTotalEnergy, showExported, showRenewables]); // dependencies for rerender
+  }, [year, showTotalEnergy, showExported, showRenewables, wantedUniversities]); // dependencies for rerender
 
   useEffect(() => {
-    if (viewMode !== 'trend') return;
+    if (viewMode !== 'trend') return; 
     
     console.log("View Mode: ", viewMode)
     const years = [15, 16, 17, 18, 19, 20, 21, 22, 23];
@@ -88,14 +88,14 @@ function App() {
         })
         .catch((err) => console.error("Error loading CSV:", err));
     });
-  }, [showTotalEnergy, showExported, showRenewables, viewMode]);
+  }, [showTotalEnergy, showExported, showRenewables, viewMode, wantedUniversities]);
 
   console.log("Data", data)
 
   return (
     <>
       <h1>Energy Consumption of Universities</h1>
-      <UniListSearch/>    
+      <UniListSearch wantedUniversities={wantedUniversities} setWantedUniversities={setWantedUniversities}/>    
       <br></br>
 
       {/* Maybe change these to radio buttons so only one is rendered at a time? No scrolling needed and less complicated. Then change the conditional rendering above to else if statements so only one set of data is added. Add parameter in the functions for graph title so only 2 functions total are needed and can create the graphs.  */}
