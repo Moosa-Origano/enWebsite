@@ -1,7 +1,9 @@
 
 
 
-
+* {
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif
+}
 
 
 
@@ -38,6 +40,8 @@
     width: 20px;
     border-radius: 50%;
     cursor: pointer   ;
+    box-shadow: 1px 1px;
+
 }
 
 /* ---------------------------------------------------------- */

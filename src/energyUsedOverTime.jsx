@@ -24,7 +24,7 @@ export default function BarGraph({ totalEnergyConsumed, energyExported, renewabl
           angle={-45}
           textAnchor="end"
           height={100}
-        />
+        />x 
         <YAxis domain={[0, 300000000]}/>
         <Tooltip />
         <Legend />
