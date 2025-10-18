@@ -1,8 +1,8 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
-export default function BarGraph({ totalEnergyConsumed, energyExported, renewablesGenerated, data }) {
+export default function BarGraph({ selectedEnergyType,  data }) {
 
-  console.log(totalEnergyConsumed)
+  console.log("Show total energy: " , selectedEnergyType)
   console.log("DATA" , data)
   
   return (
@@ -30,7 +30,7 @@ export default function BarGraph({ totalEnergyConsumed, energyExported, renewabl
         <Tooltip />
         <Legend />
         <Bar 
-          dataKey="Total energy consumption (kWh)" 
+          dataKey={selectedEnergyType} 
           fill="#8884d8" 
         />
         {/* <Bar 

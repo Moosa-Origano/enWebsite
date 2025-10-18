@@ -12,10 +12,11 @@ function App() {
   const [wantedUniversities, setWantedUniversities] = useState ([])//(["The University of Edinburgh", "The University of Oxford","The University of Cambridge", "University College London", "Imperial College of Science, Technology and Medicine", "The University of Manchester", "King's College London", "The University of Warwick"])
   const [showTotalEnergy, setShowTotalEnergy] = useState(true)
   const [showExported, setShowExported] = useState(false)
-  const [showRenewables, setShowRenewables] = useState (true)
+  const [showRenewables, setShowRenewables] = useState (false)
   const [year, setYear] = useState (15)
   const [trendData, setTrendData] = useState([])
   const [viewMode, setViewMode] = useState('single') 
+  const [selectedEnergyType, setSelectedEnergyType] = useState('Total renewable energy generated onsite or offsite (kWh)') // default to total energy consumed
 
 
   // Single year choose data. 
@@ -25,18 +26,18 @@ function App() {
       .then((response) => response.text())
       .then((csvText) => {
         const parsed = Papa.parse(csvText, { header: true })
-    
+        console.log("Show graphed energy type: " , selectedEnergyType)
         const filtered = parsed.data
           .filter(row => wantedUniversities.includes(row["HE provider"]))
           .map(row => ({
             "HE provider": row["HE provider"].replace('the', '').replace('University', '').replace('of', '').replace('College', '').replace('Science, Technology and Medicine', '').replace('The', '').trim(),  
-            ...(showTotalEnergy && { 
+            ...(selectedEnergyType === 'Total energy consumption (kWh)' && { 
               "Total energy consumption (kWh)": parseFloat(row["Total energy consumption (kWh)"].split(',').join('').trim())
             }),
-            ...(showExported && { 
+            ...(selectedEnergyType === 'Total generation of electricity exported to grid (kWh)' && { 
               "Total generation of electricity exported to grid (kWh)": parseFloat(row["Total generation of electricity exported to grid (kWh)"].split(',').join('').trim())
             }),
-            ...(showRenewables && { 
+            ...(selectedEnergyType === 'Total renewable energy generated onsite or offsite (kWh)' && { 
               "Total renewable energy generated onsite or offsite (kWh)": parseFloat(row["Total renewable energy generated onsite or offsite (kWh)"].split(',').join('').trim())
             })
           }))
@@ -45,7 +46,7 @@ function App() {
         setData(filtered); 
       })
       .catch((err) => console.error("Error loading CSV:", err));
-  }, [year, showTotalEnergy, showExported, showRenewables, wantedUniversities]); // dependencies for rerender
+  }, [viewMode, year, wantedUniversities, selectedEnergyType]); // dependencies for rerender
 
   // Multi year data 
   useEffect(() => {
@@ -91,20 +92,20 @@ function App() {
         })
         .catch((err) => console.error("Error loading CSV:", err));
     });
-  }, [showTotalEnergy, showExported, showRenewables, viewMode, wantedUniversities]);
+  }, [viewMode, wantedUniversities, selectedEnergyType]);
 
   console.log("Data", data)
 
   return (
     <>
-      <h1>Energy Consumption of Universities</h1>
+      <h1>{selectedEnergyType}</h1>
       <UniListSearch wantedUniversities={wantedUniversities} setWantedUniversities={setWantedUniversities}/>      
 
       {viewMode === 'single' && 
       <div>
         
       <h2>Energy Consumption of Universities (kWh) {`(20${year}-20${year+1})`}</h2>
-      <BarGraph totalEnergyConsumed = {showTotalEnergy} energyExported = {showExported} renewablesGenerated = {showRenewables} data = {data} ></BarGraph>
+      <BarGraph selectedEnergyType = {selectedEnergyType} renewablesGenerated = {showRenewables} data = {data} ></BarGraph>
       </div>
       }
       
@@ -115,13 +116,13 @@ function App() {
 
       {/* Maybe change these to radio buttons so only one is rendered at a time? No scrolling needed and less complicated. Then change the conditional rendering above to else if statements so only one set of data is added. Add parameter in the functions for graph title so only 2 functions total are needed and can create the graphs.  */}
       <label htmlFor="totalE">Total Energy Consumed</label> 
-      <input name = "EnergyType"  id="totalE" checked ={showTotalEnergy} type='radio' onChange={(e) => setShowTotalEnergy(e.target.checked)}></input>
+      <input name = "EnergyType"  id="totalE" checked ={showTotalEnergy} type='radio' value = "Total energy consumption (kWh)" onChange={(e) => setSelectedEnergyType(e.target.checked)}></input>
 
       <label htmlFor="exported">Energy Exported to Grid</label>
-      <input name = "EnergyType"  id="exported" checked ={showExported} type='radio' onChange={(e) => setShowExported(e.target.checked)}></input>
+      <input name = "EnergyType"  id="exported" checked ={showExported} type='radio' value = "Total generation of electricity exported to grid (kWh)" onChange={(e) => setSelectedEnergyType(e.target.checked)}></input>
 
       <label htmlFor="renewables">Renewable Energy Generated</label>
-      <input name = "EnergyType" id="renewables" checked ={showRenewables} type='radio' onChange={(e) => setShowRenewables(e.target.checked)}></input>
+      <input name = "EnergyType" id="renewables" checked ={showRenewables} type='radio' value="Total renewable energy generated onsite or offsite (kWh)" onChange={(e) => setSelectedEnergyType(e.target.checked)}></input>
 
       <div>
         <input name = "yearSelect" id='15' type='radio' value={year} onChange={(e) => setYear(15)}></input>
