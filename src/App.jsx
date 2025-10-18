@@ -68,7 +68,7 @@ function App() {
             .forEach(row => {
               const shortName = row["HE provider"].replace('the', '').replace('University', '').replace('of', '').replace('College', '').replace('Science, Technology and Medicine', '').replace('The', '');
 
-              if (showTotalEnergy) {
+              if (showTotalEnergy && row["Total energy consumption (kWh)"]) {
                 yearData[shortName] = parseFloat(row["Total energy consumption (kWh)"].split(',').join(''));
               }
               // if (showExported) { // i dont think these should be in here now that I think about it..
