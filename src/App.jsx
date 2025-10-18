@@ -100,17 +100,28 @@ function App() {
       <h1>Energy Consumption of Universities</h1>
       <UniListSearch wantedUniversities={wantedUniversities} setWantedUniversities={setWantedUniversities}/>      
 
+      {viewMode === 'single' && 
+      <div>
+        
+      <h2>Energy Consumption of Universities (kWh) {`(20${year}-20${year+1})`}</h2>
+      <BarGraph totalEnergyConsumed = {showTotalEnergy} energyExported = {showExported} renewablesGenerated = {showRenewables} data = {data} ></BarGraph>
+      </div>
+      }
+      
+
+      {viewMode === 'trend' && <TrendGraph data = {trendData} ></TrendGraph>}
+
 
 
       {/* Maybe change these to radio buttons so only one is rendered at a time? No scrolling needed and less complicated. Then change the conditional rendering above to else if statements so only one set of data is added. Add parameter in the functions for graph title so only 2 functions total are needed and can create the graphs.  */}
       <label htmlFor="totalE">Total Energy Consumed</label> 
-      <input id="totalE" checked ={showTotalEnergy} type='checkbox' onChange={(e) => setShowTotalEnergy(e.target.checked)}></input>
+      <input name = "EnergyType"  id="totalE" checked ={showTotalEnergy} type='radio' onChange={(e) => setShowTotalEnergy(e.target.checked)}></input>
 
       <label htmlFor="exported">Energy Exported to Grid</label>
-      <input id="exported" checked ={showExported} type='checkbox' onChange={(e) => setShowExported(e.target.checked)}></input>
+      <input name = "EnergyType"  id="exported" checked ={showExported} type='radio' onChange={(e) => setShowExported(e.target.checked)}></input>
 
       <label htmlFor="renewables">Renewable Energy Generated</label>
-      <input id="renewables" checked ={showRenewables} type='checkbox' onChange={(e) => setShowRenewables(e.target.checked)}></input>
+      <input name = "EnergyType" id="renewables" checked ={showRenewables} type='radio' onChange={(e) => setShowRenewables(e.target.checked)}></input>
 
       <div>
         <input name = "yearSelect" id='15' type='radio' value={year} onChange={(e) => setYear(15)}></input>
@@ -166,16 +177,7 @@ function App() {
       </div>
 
 
-      {viewMode === 'single' && 
-      <div>
-        
-      <h2>Energy Consumption of Universities (kWh) {`(20${year}-20${year+1})`}</h2>
-      <BarGraph totalEnergyConsumed = {showTotalEnergy} energyExported = {showExported} renewablesGenerated = {showRenewables} data = {data} ></BarGraph>
-      </div>
-      }
-      
 
-      {viewMode === 'trend' && <TrendGraph data = {trendData} ></TrendGraph>}
     </>
   )
 } 
