@@ -10,13 +10,10 @@ import "./styles/App.css"
 function App() {
   const [data, setData] = useState([])
   const [wantedUniversities, setWantedUniversities] = useState ([])//(["The University of Edinburgh", "The University of Oxford","The University of Cambridge", "University College London", "Imperial College of Science, Technology and Medicine", "The University of Manchester", "King's College London", "The University of Warwick"])
-  const [showTotalEnergy, setShowTotalEnergy] = useState(true)
-  const [showExported, setShowExported] = useState(false)
-  const [showRenewables, setShowRenewables] = useState (false)
   const [year, setYear] = useState (15)
   const [trendData, setTrendData] = useState([])
   const [viewMode, setViewMode] = useState('single') 
-  const [selectedEnergyType, setSelectedEnergyType] = useState('Total renewable energy generated onsite or offsite (kWh)') // default to total energy consumed
+  const [selectedEnergyType, setSelectedEnergyType] = useState("Total energy consumption (kWh)") // default to total energy consumed
 
 
   // Single year choose data. 
@@ -104,8 +101,8 @@ function App() {
       {viewMode === 'single' && 
       <div>
         
-      <h2>Energy Consumption of Universities (kWh) {`(20${year}-20${year+1})`}</h2>
-      <BarGraph selectedEnergyType = {selectedEnergyType} renewablesGenerated = {showRenewables} data = {data} ></BarGraph>
+      <h2>{selectedEnergyType} {`(20${year}-20${year+1})`}</h2>
+      <BarGraph selectedEnergyType = {selectedEnergyType} data = {data} ></BarGraph>
       </div>
       }
       
@@ -116,13 +113,13 @@ function App() {
 
       {/* Maybe change these to radio buttons so only one is rendered at a time? No scrolling needed and less complicated. Then change the conditional rendering above to else if statements so only one set of data is added. Add parameter in the functions for graph title so only 2 functions total are needed and can create the graphs.  */}
       <label htmlFor="totalE">Total Energy Consumed</label> 
-      <input name = "EnergyType"  id="totalE" checked ={showTotalEnergy} type='radio' value = "Total energy consumption (kWh)" onChange={(e) => setSelectedEnergyType(e.target.checked)}></input>
+      <input name = "EnergyType"  id="totalE" type='radio' checked={selectedEnergyType === "Total energy consumption (kWh)"} value = "Total energy consumption (kWh)" onChange={(e) => setSelectedEnergyType(e.target.value)}></input>
 
       <label htmlFor="exported">Energy Exported to Grid</label>
-      <input name = "EnergyType"  id="exported" checked ={showExported} type='radio' value = "Total generation of electricity exported to grid (kWh)" onChange={(e) => setSelectedEnergyType(e.target.checked)}></input>
+      <input name = "EnergyType"  id="exported"  type='radio' checked={selectedEnergyType === "Total generation of electricity exported to grid (kWh)"} value = "Total generation of electricity exported to grid (kWh)" onChange={(e) => setSelectedEnergyType(e.target.value)}></input>
 
       <label htmlFor="renewables">Renewable Energy Generated</label>
-      <input name = "EnergyType" id="renewables" checked ={showRenewables} type='radio' value="Total renewable energy generated onsite or offsite (kWh)" onChange={(e) => setSelectedEnergyType(e.target.checked)}></input>
+      <input name = "EnergyType" id="renewables"type='radio'  checked={selectedEnergyType === "Total renewable energy generated onsite or offsite (kWh)"} value="Total renewable energy generated onsite or offsite (kWh)" onChange={(e) => setSelectedEnergyType(e.target.value)}></input>
 
       <div>
         <input name = "yearSelect" id='15' type='radio' value={year} onChange={(e) => setYear(15)}></input>
