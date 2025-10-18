@@ -66,15 +66,13 @@ function App() {
             .forEach(row => {
               const shortName = row["HE provider"].replace('the', '').replace('University', '').replace('of', '').replace('College', '').replace('Science, Technology and Medicine', '').replace('The', '');
 
-              if (showTotalEnergy && row["Total energy consumption (kWh)"]) {
+              if (selectedEnergyType === 'Total energy consumption (kWh)' && row["Total energy consumption (kWh)"]) {
                 yearData[shortName] = parseFloat(row["Total energy consumption (kWh)"].split(',').join(''));
+              } else if (selectedEnergyType === 'Total generation of electricity exported to grid (kWh)' && row['Total generation of electricity exported to grid (kWh)']) {
+                yearData[shortName] = parseFloat(row["Total generation of electricity exported to grid (kWh)"].split(',').join(''));
+              } else if (selectedEnergyType === 'Total renewable energy generated onsite or offsite (kWh)' && row['Total renewable energy generated onsite or offsite (kWh)']) {
+                yearData[shortName] = parseFloat(row["Total renewable energy generated onsite or offsite (kWh)"].split(',').join(''));
               }
-              // if (showExported) { // i dont think these should be in here now that I think about it..
-              //   yearData[shortName + ' Exported'] = parseFloat(row["Total generation of electricity exported to grid (kWh)"].split(',').join(''));
-              // }
-              // if (showRenewables) {
-              //   yearData[shortName + ' Renewables'] = parseFloat(row["Total renewable energy generated onsite or offsite (kWh)"].split(',').join(''));
-              // }
             });
           
           allYearsData.push(yearData);
@@ -107,7 +105,12 @@ function App() {
       }
       
 
-      {viewMode === 'trend' && <TrendGraph data = {trendData} ></TrendGraph>}
+      {viewMode === 'trend' && 
+      <div>
+      <h2>{selectedEnergyType} (2015-2023)</h2>
+      <TrendGraph data = {trendData} ></TrendGraph>
+      </div>
+      }
 
 
 

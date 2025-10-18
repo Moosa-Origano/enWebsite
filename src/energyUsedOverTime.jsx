@@ -1,4 +1,6 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import "./styles/energyUsedOverTime.css";
+
 
 export default function BarGraph({ selectedEnergyType,  data }) {
 
@@ -6,7 +8,8 @@ export default function BarGraph({ selectedEnergyType,  data }) {
   console.log("DATA" , data)
   
   return (
-    <ResponsiveContainer width="100%" height={300}>
+    <div id="bar-graph-container">
+    <ResponsiveContainer width="100%" height="100%">
       <BarChart
         width={500}
         height={300}
@@ -40,5 +43,6 @@ export default function BarGraph({ selectedEnergyType,  data }) {
         /> */}
       </BarChart>
     </ResponsiveContainer>
+    </div>
   );
 }

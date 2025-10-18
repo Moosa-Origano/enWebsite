@@ -3,7 +3,7 @@ import "./styles/TrendGraph.css";
 
 export default function TrendGraph({ data }) {
   // {year: 2015, Edinburgh: 123456, Oxford: 234567, ...}
-  console.log("Trend Graph called")
+  console.log("Trend Graph called", data)
   // All uni names without year.
   let universities = [];
 
@@ -34,7 +34,7 @@ export default function TrendGraph({ data }) {
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="year" />
-        <YAxis />
+        <YAxis   tickFormatter={(value) => `${(value / 1_000_000).toFixed(1)}M`}/>
         <Tooltip />
         <Legend verticalAlign='bottom' align='center'/>
         {universities.map((uni, index) => (
