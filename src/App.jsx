@@ -192,7 +192,7 @@ function App() {
       </div> */}
 
       <br></br>
-      <div>
+      <div id="dataFormatDiv">
         <div>
           <input type="radio" id="singleView" name="viewMode" value="single" checked={viewMode === 'single'} onChange={(e) => setViewMode(e.target.value)}/>
           <label htmlFor="singleView">Single Year View</label>

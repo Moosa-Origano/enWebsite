@@ -51,6 +51,18 @@
 }
 
 
+#dataFormatDiv {
+    background-color: white;
+    border-radius: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    display: flex;
+    justify-content: space-evenly;
+    margin-bottom: 20px;
+    box-shadow: 8px 8px 5px lightgray;
+
+}
+
 /* The elements that show which universities have been chosen + delete buttons to remove them */
 .removeUniversities {
     display: inline-block;

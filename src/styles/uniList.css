@@ -1,5 +1,5 @@
 #myInput {
-  width: 90%;
+  width: 98%;
   padding: 10px;
   font-size: 16px;
 }
@@ -47,4 +47,17 @@
 
 #myUL li:hover {
     background-color: #e6e3e3;
+}
+
+
+button {
+    border: none;
+    background-color: white;
+    color: grey;
+    font-size: 15px;
+}
+
+button:hover {
+    color: black;
+    font-size: 16px;
 }
