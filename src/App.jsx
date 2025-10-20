@@ -93,12 +93,12 @@ function App() {
 
   return (
     <>
-      <h1>{selectedEnergyType}</h1>
+      <div id="mainTitleDiv"><h1>University Energy Data</h1></div>
+      
       <UniListSearch wantedUniversities={wantedUniversities} setWantedUniversities={setWantedUniversities}/>      
 
       {viewMode === 'single' && 
-      <div>
-        
+      <div className="energyGraphingDiv">
       <h2>{selectedEnergyType} {`(20${year}-20${year+1})`}</h2>
       <BarGraph selectedEnergyType = {selectedEnergyType} data = {data} ></BarGraph>
       </div>
@@ -106,7 +106,7 @@ function App() {
       
 
       {viewMode === 'trend' && 
-      <div>
+      <div className="energyGraphingDiv">
       <h2>{selectedEnergyType} (2015-2023)</h2>
       <TrendGraph data = {trendData} ></TrendGraph>
       </div>
@@ -115,43 +115,70 @@ function App() {
 
 
       {/* Maybe change these to radio buttons so only one is rendered at a time? No scrolling needed and less complicated. Then change the conditional rendering above to else if statements so only one set of data is added. Add parameter in the functions for graph title so only 2 functions total are needed and can create the graphs.  */}
-      <label htmlFor="totalE">Total Energy Consumed</label> 
-      <input name = "EnergyType"  id="totalE" type='radio' checked={selectedEnergyType === "Total energy consumption (kWh)"} value = "Total energy consumption (kWh)" onChange={(e) => setSelectedEnergyType(e.target.value)}></input>
+      <div id="EnergyViewDiv">
 
-      <label htmlFor="exported">Energy Exported to Grid</label>
-      <input name = "EnergyType"  id="exported"  type='radio' checked={selectedEnergyType === "Total generation of electricity exported to grid (kWh)"} value = "Total generation of electricity exported to grid (kWh)" onChange={(e) => setSelectedEnergyType(e.target.value)}></input>
+        <section>
+        <label htmlFor="totalE">Total Energy Consumed</label> 
+        <input name = "EnergyType"  id="totalE" type='radio' checked={selectedEnergyType === "Total energy consumption (kWh)"} value = "Total energy consumption (kWh)" onChange={(e) => setSelectedEnergyType(e.target.value)}></input>
+        </section>
 
-      <label htmlFor="renewables">Renewable Energy Generated</label>
-      <input name = "EnergyType" id="renewables"type='radio'  checked={selectedEnergyType === "Total renewable energy generated onsite or offsite (kWh)"} value="Total renewable energy generated onsite or offsite (kWh)" onChange={(e) => setSelectedEnergyType(e.target.value)}></input>
+        <section>
+        <label htmlFor="exported">Energy Exported to Grid</label>
+        <input name = "EnergyType"  id="exported"  type='radio' checked={selectedEnergyType === "Total generation of electricity exported to grid (kWh)"} value = "Total generation of electricity exported to grid (kWh)" onChange={(e) => setSelectedEnergyType(e.target.value)}></input>
+        </section>
 
-      <div>
-        <input name = "yearSelect" id='15' type='radio' value={year} onChange={(e) => setYear(15)}></input>
+        <section>
+        <label htmlFor="renewables">Renewable Energy Generated</label>
+        <input name = "EnergyType" id="renewables"type='radio'  checked={selectedEnergyType === "Total renewable energy generated onsite or offsite (kWh)"} value="Total renewable energy generated onsite or offsite (kWh)" onChange={(e) => setSelectedEnergyType(e.target.value)}></input>
+        </section>
+      </div>
+
+
+      <div id="yearSelectionDiv">
+        <section>
+        <input className="yearSelectionRadio" name = "yearSelect" id='15' type='radio' value={year} onChange={(e) => setYear(15)}></input>
         <label htmlFor="15">2015-16</label>
+        </section>
 
-        <input name = "yearSelect" id='16' type='radio' value={year} onChange={(e) => setYear(16)}></input>
+        <section>
+        <input className="yearSelectionRadio" name = "yearSelect" id='16' type='radio' value={year} onChange={(e) => setYear(16)}></input>
         <label htmlFor="16">2016-17</label>
+        </section>
 
-        <input name = "yearSelect" id='17' type='radio' value={year} onChange={(e) => setYear(17)}></input>
+        <section>
+        <input className="yearSelectionRadio" name = "yearSelect" id='17' type='radio' value={year} onChange={(e) => setYear(17)}></input>
         <label htmlFor="17">2017-18</label>
+        </section>
 
-        <input name = "yearSelect" id='18' type='radio' value={year} onChange={(e) => setYear(18)}></input>
+        <section>
+        <input className="yearSelectionRadio" name = "yearSelect" id='18' type='radio' value={year} onChange={(e) => setYear(18)}></input>
         <label htmlFor="18">2018-19</label>
+        </section>
 
-        <input name = "yearSelect" id='19' type='radio' value={year} onChange={(e) => setYear(19)}></input>
+        <section>
+        <input className="yearSelectionRadio" name = "yearSelect" id='19' type='radio' value={year} onChange={(e) => setYear(19)}></input>
         <label htmlFor="19">2019-20</label>
+        </section>
 
-        <input name = "yearSelect" id='20' type='radio' value={year} onChange={(e) => setYear(20)}></input>
+        <section>
+        <input className="yearSelectionRadio" name = "yearSelect" id='20' type='radio' value={year} onChange={(e) => setYear(20)}></input>
         <label htmlFor="20">2020-21</label>
+        </section>
 
-        <input name = "yearSelect" id='21' type='radio' value={year} onChange={(e) => setYear(21)}></input>
+        <section>
+        <input className="yearSelectionRadio" name = "yearSelect" id='21' type='radio' value={year} onChange={(e) => setYear(21)}></input>
         <label htmlFor="21">2021-22</label>
-
-        <input name = "yearSelect" id='22' type='radio' value={year} onChange={(e) => setYear(22)}></input>
+        </section>
+        
+        <section>
+        <input className="yearSelectionRadio" name = "yearSelect" id='22' type='radio' value={year} onChange={(e) => setYear(22)}></input>
         <label htmlFor="22">2022-23</label>
+        </section>
 
-        <input name = "yearSelect" id='23' type='radio' value={year} onChange={(e) => setYear(23)}></input>
+        <section>
+        <input className="yearSelectionRadio" name = "yearSelect" id='23' type='radio' value={year} onChange={(e) => setYear(23)}></input>
         <label htmlFor="23">2023-24</label>
-
+        </section>
       </div>  
 
 {/* 
