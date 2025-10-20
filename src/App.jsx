@@ -93,7 +93,7 @@ function App() {
 
   return (
     <>
-      <h1>{selectedEnergyType}</h1>
+      <h1 id="main-title">University Energy Usage</h1>
       <UniListSearch wantedUniversities={wantedUniversities} setWantedUniversities={setWantedUniversities}/>      
 
       {viewMode === 'single' && 
