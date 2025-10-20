@@ -171,18 +171,18 @@ export default function UniListSearch( { wantedUniversities, setWantedUniversiti
   console.log(wantedUniversities)
 
   return (
-    <div id="listofUnisBox">
+    <div>
       <input type="text" id="myInput"  placeholder="Search for names.." onChange={(e) => setCharacters(e.target.value)}></input>
 
+      <div id="listofUnisBox">
+      <ul id='myUL' placeholder = 'Search for names... '>
+        {universities.filter(university => university.includes(characters)).map((university, index) => <li key={index} onClick={() => { if (wantedUniversities.includes(university) === false) {setWantedUniversities([...wantedUniversities, university]);}}  } >{university}</li>)}
+      </ul>
+      </div>
 
       <div id="listContainer">
       {wantedUniversities.map(uni =><div className="removeUniversities" key={uni}>{uni}<button class ="removeUniversitiesButton" onClick = {() => setWantedUniversities(wantedUniversities.filter(uniName => uniName !== uni))}>x</button> </div> )}
       </div>
-
-
-      <ul id='myUL' placeholder = 'Search for names... '>
-        {universities.filter(university => university.includes(characters)).map((university, index) => <li key={index} onClick={() => { if (wantedUniversities.includes(university) === false) {setWantedUniversities([...wantedUniversities, university]);}}  } >{university}</li>)}
-      </ul>
 
       <button onClick={() => setWantedUniversities([])} >Clear All</button>
       <button onClick={() => setWantedUniversities(universities)}>Select All</button>

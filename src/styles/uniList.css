@@ -1,18 +1,20 @@
 #myInput {
   width: 98%;
-  padding: 10px;
+  padding: 15px;
   font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  margin-right: 8px;
+  box-shadow: 5px 5px 5px lightgray;
 }
 
+#myInput:focus {
+    outline: none;
+}
+
+
 #listofUnisBox {
-    border: solid    ;
-    border-color: rgb(230, 235, 236);
-    padding: 10px;
-    background-color: white;
-    border-radius: 10px;
-    padding-top: 20px;
-    padding-bottom: 20px;
-    box-shadow: 10px 10px 5px lightgray;
+
 
 }
 
@@ -23,7 +25,13 @@
     height: 200px;
     overflow:hidden; 
     overflow-y:scroll;
-    padding: 0px;
+
+    border-color: rgb(230, 235, 236);
+    padding: 10px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 10px 10px 5px lightgray;
+    margin-top: 20px;
 }   
 
 #listContainer {
@@ -33,31 +41,34 @@
 
 #myUL li {
     list-style-type: none;
-    border-width: 1px;
-    outline: 1px solid;
-    margin-top: 1px;
-    margin-left: 1px;
+
     font: bold;
     font-size: 17px;
     padding-left: 0px;
     background-color: #fffefe;
-    padding: 5px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
     width: 99%;
 }
 
 #myUL li:hover {
     background-color: #e6e3e3;
+    border-radius: 5px;
 }
 
 
 button {
-    border: none;
+    color: black;
+    font-size: 16px;
     background-color: white;
-    color: grey;
-    font-size: 15px;
+    font: bold;
+    border-color: lightgray;
+    padding: 8px;
+    border-radius: 6px;
 }
 
 button:hover {
-    color: black;
-    font-size: 16px;
+    background-color: #e6e3e3;
+    cursor: pointer;
 }
