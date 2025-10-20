@@ -31,7 +31,7 @@ export default function BarGraph({ selectedEnergyType,  data }) {
          {/* domain={[0, 300000000]} */}
         <YAxis /> 
         <Tooltip />
-        <Legend />
+
         <Bar 
           dataKey={selectedEnergyType} 
           fill="#8884d8" 
