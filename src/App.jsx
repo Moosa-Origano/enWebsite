@@ -15,7 +15,6 @@ function App() {
   const [viewMode, setViewMode] = useState('single') 
   const [selectedEnergyType, setSelectedEnergyType] = useState("Total energy consumption (kWh)") // default to total energy consumed
 
-
   // Single year choose data. 
   useEffect(() => {
     if (viewMode !== 'single') { return } // only produce this data when the option is selected

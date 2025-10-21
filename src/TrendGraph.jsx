@@ -34,7 +34,8 @@ export default function TrendGraph({ data }) {
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="year" />
-        <YAxis   tickFormatter={(value) => `${(value / 1_000_000).toFixed(1)}M`}/>
+        <YAxis />
+        {/* tickFormatter={(value) => `${(value / 1_000_000).toFixed(1)}M`} */}
         <Tooltip />
         <Legend verticalAlign='bottom' align='center'/>
         {universities.map((uni, index) => (
