@@ -165,7 +165,7 @@ import { useState } from 'react'
   "The University of York"
 ];
 
-
+// function that generates the university list to be chosen, and creates the search function to choose universities
 export default function UniListSearch( { wantedUniversities, setWantedUniversities }) {
   const [characters, setCharacters] = useState("")
   console.log(wantedUniversities)

@@ -18,14 +18,14 @@ function App() {
   // Single year choose data. 
   useEffect(() => {
     if (viewMode !== 'single') { return } // only produce this data when the option is selected
-    fetch(`/energyData/20${year}-${year+1}.csv`)
-      .then((response) => response.text())
-      .then((csvText) => {
-        const parsed = Papa.parse(csvText, { header: true })
-        console.log("Show graphed energy type: " , selectedEnergyType)
-        const filtered = parsed.data
+    fetch(`/energyData/20${year}-${year+1}.csv`) // fetches the energy data for the chosen year from the folder energyData in public
+      .then((response) => response.text()) // takes the data and converts to text
+      .then((csvText) => { 
+        const parsed = Papa.parse(csvText, { header: true }) // parses the csv file 
+        console.log("Show graphed energy type: " , selectedEnergyType) // outputs that it is single view for debugging
+        const filtered = parsed.data // filtered stores the parsed data that is included in wantedUniversities state, and maps the elements to the chosen energy data for graph creation
           .filter(row => wantedUniversities.includes(row["HE provider"]))
-          .map(row => ({
+          .map(row => ({ // .replace attempts to shorten the university name, so University of Oxford -> Oxford
             "HE provider": row["HE provider"].replace('the', '').replace('University', '').replace('of', '').replace('College', '').replace('Science, Technology and Medicine', '').replace('The', '').trim(),  
             ...(selectedEnergyType === 'Total energy consumption (kWh)' && { 
               "Total energy consumption (kWh)": parseFloat(row["Total energy consumption (kWh)"].split(',').join('').trim())
@@ -48,11 +48,11 @@ function App() {
   useEffect(() => {
     if (viewMode !== 'trend') return; 
     
-    console.log("View Mode: ", viewMode)
-    const years = [15, 16, 17, 18, 19, 20, 21, 22, 23];
-    const allYearsData = [];
+    console.log("View Mode: ", viewMode) // output for debugging
+    const years = [15, 16, 17, 18, 19, 20, 21, 22, 23]; // the current years of data available.
+    const allYearsData = []; // initialising
     let completed = 0;
-    years.forEach(y => {
+    years.forEach(y => { // iterates through the years fetching the data for each and appending to allYearsData. 
       fetch(`/energyData/20${y}-${y+1}.csv`)
         .then((response) => response.text())
         .then((csvText) => {
@@ -86,16 +86,18 @@ function App() {
         })
         .catch((err) => console.error("Error loading CSV:", err));
     });
-  }, [viewMode, wantedUniversities, selectedEnergyType]);
+  }, [viewMode, wantedUniversities, selectedEnergyType]); // dependencies don't include year as all are selected
 
-  console.log("Data", data)
+  console.log("Data", data) // output data for debugging
 
   return (
     <>
-      <div id="mainTitleDiv"><h1>University Energy Data</h1></div>
+      <div id="mainTitleDiv"><h1>University Energy Data</h1></div> {/*Main title*/}
       
-      <UniListSearch wantedUniversities={wantedUniversities} setWantedUniversities={setWantedUniversities}/>      
+      {/*Renders the UniListSearch component for the search bar and choosable list of universities*/}
+      <UniListSearch wantedUniversities={wantedUniversities} setWantedUniversities={setWantedUniversities}/>  
 
+      {/*Conditionally rendered if the single bar chart view is wanted */}
       {viewMode === 'single' && 
       <div className="energyGraphingDiv">
       <h2>{selectedEnergyType} {`(20${year}-20${year+1})`}</h2>
@@ -103,7 +105,7 @@ function App() {
       </div>
       }
       
-
+      {/*Conditionally rendered if the trend view is wanted */}
       {viewMode === 'trend' && 
       <div className="energyGraphingDiv">
       <h2>{selectedEnergyType} (2015-2023)</h2>
@@ -112,8 +114,7 @@ function App() {
       }
 
 
-
-      {/* Maybe change these to radio buttons so only one is rendered at a time? No scrolling needed and less complicated. Then change the conditional rendering above to else if statements so only one set of data is added. Add parameter in the functions for graph title so only 2 functions total are needed and can create the graphs.  */}
+      {/*Radiobuttons for selecting total energy, energy exported, or renewables generated view.*/}
       <div id="EnergyViewDiv">
 
         <section>
@@ -132,7 +133,7 @@ function App() {
         </section>
       </div>
 
-
+      {/* Buttons for selecting which year of data should be viewed. */}
       <div id="yearSelectionDiv">
         <section>
         <input className="yearSelectionRadio" name = "yearSelect" id='15' type='radio' value={year} onChange={(e) => setYear(15)}></input>
@@ -190,6 +191,8 @@ function App() {
         </select>
       </div> */}
 
+
+      {/*Radiobuttons for choosing single bar chart view or trend view for multiple years of data analysis*/}
       <br></br>
       <div id="dataFormatDiv">
         <div>
