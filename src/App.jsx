@@ -14,10 +14,30 @@ function App() {
   const [trendData, setTrendData] = useState([])
   const [viewMode, setViewMode] = useState('single') 
   const [selectedEnergyType, setSelectedEnergyType] = useState("Total energy consumption (kWh)") // default to total energy consumed
+  const [perStudent, setPerStudent] = useState(false)
+  const [studentData, setStudentData] = useState([])
+
 
   // Single year choose data. 
   useEffect(() => {
+    if (perStudent) {
+      fetch(`/studentData/20${year}-${year+1}SC.csv`)
+      .then((res) => res.text())
+      .then((studentCSVText) => {
+        const studentParsed = Papa.parse(studentCSVText,{ header:  true })
+        console.log("Show student count: " , studentParsed)
+
+        const studentFiltered = studentParsed.studentData.filter(row => wantedUniversities.includes["HE provider"]).map(row => ({
+          "HE provider": row["HE provider"].replace('the', '').replace('University', '').replace('of', '').replace('College', '').replace('Science, Technology and Medicine', '').replace('The', '').trim(),  
+          "Total": parseFloat(row["Total"].split(',').join('').trim())
+        }))
+
+        console.log('Show student count' , studentFiltered)
+      })
+    }
+
     if (viewMode !== 'single') { return } // only produce this data when the option is selected
+
     fetch(`/energyData/20${year}-${year+1}.csv`) // fetches the energy data for the chosen year from the folder energyData in public
       .then((response) => response.text()) // takes the data and converts to text
       .then((csvText) => { 
@@ -42,7 +62,7 @@ function App() {
         setData(filtered); 
       })
       .catch((err) => console.error("Error loading CSV:", err));
-  }, [viewMode, year, wantedUniversities, selectedEnergyType]); // dependencies for rerender
+  }, [viewMode, year, wantedUniversities, selectedEnergyType, perStudent]); // dependencies for rerender
 
   // Multi year data 
   useEffect(() => {
@@ -86,14 +106,13 @@ function App() {
         })
         .catch((err) => console.error("Error loading CSV:", err));
     });
-  }, [viewMode, wantedUniversities, selectedEnergyType]); // dependencies don't include year as all are selected
+  }, [viewMode, wantedUniversities, selectedEnergyType, perStudent]); // dependencies don't include year as all are selected
 
   console.log("Data", data) // output data for debugging
 
   return (
     <>
       <div id="mainTitleDiv"><h1>University Energy Data</h1></div> {/*Main title*/}
-      
       {/*Renders the UniListSearch component for the search bar and choosable list of universities*/}
       <UniListSearch wantedUniversities={wantedUniversities} setWantedUniversities={setWantedUniversities}/>  
 
@@ -108,6 +127,7 @@ function App() {
       {/*Conditionally rendered if the trend view is wanted */}
       {viewMode === 'trend' && 
       <div className="energyGraphingDiv">
+
       <h2>{selectedEnergyType} (2015-2023)</h2>
       <TrendGraph data = {trendData} ></TrendGraph>
       </div>
@@ -116,6 +136,10 @@ function App() {
 
       {/*Radiobuttons for selecting total energy, energy exported, or renewables generated view.*/}
       <div id="EnergyViewDiv">
+        <section>
+          <label htmlFor="perStudentCheck">Per Student</label>
+          <input name = "perStudentCheck" type="checkbox" id="perStudentCheck" checked = {perStudent} onChange={() => setPerStudent(!perStudent)}></input>
+        </section>
 
         <section>
         <label htmlFor="totalE">Total Energy Consumed</label> 
