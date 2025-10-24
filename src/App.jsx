@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react"
 import Papa from "papaparse";
 import BarGraph from "./energyUsedOverTime";
 import TrendGraph from './TrendGraph'
@@ -104,117 +104,110 @@ function App() {
 
   // Multi year data 
   useEffect(() => {
-    if (viewMode !== 'trend') return; 
-    
-    console.log("View Mode: ", viewMode) // output for debugging
-    const years = [15, 16, 17, 18, 19, 20, 21, 22, 23]; // the current years of data available.
-    const allYearsData = []; // initialising
-    let completed = 0;
+    if (viewMode !== 'trend') return;
 
-    years.forEach(y => { // iterates through the years fetching the data for each and appending to allYearsData. 
+    console.log("View Mode: ", viewMode) // output for debugging
+    const years = [15, 16, 17, 18, 19, 20, 21, 22, 23] // the current years of data available.
+    const allYearsData = [] // initialising
+    let completed = 0
+
+    years.forEach(y => {
       fetch(`/energyData/20${y}-${y+1}.csv`)
         .then((response) => response.text())
         .then((csvText) => {
-          const parsed = Papa.parse(csvText, { header: true, dynamicTyping: true });
-          const yearData = { year: 2000 + y };
-        
+          const parsed = Papa.parse(csvText, { header: true})
+          const yearData = { year: 2000 + y }
+
           if (perStudent) {
-            fetch(`/studentData/20${y}-${y+1}SC.csv`)
-            .then((res) => res.text())
-            .then((studentCSVText) => {
-              const studentParsed = Papa.parse(studentCSVText, { header: true, dynamicTyping: true})
-              console.log(`Show student count for 20${y}-${y + 1}: `, studentParsed)
+            fetch(`/studentData/20${y}-${y + 1}SC.csv`)
+              .then((res) => res.text())
+              .then((studentCSVText) => {
+                const studentParsed = Papa.parse(studentCSVText, { header: true })
+                console.log(`Show student count for 20${y}-${y + 1}: `, studentParsed)
 
-              const studentFiltered = studentParsed.data.filter(row => wantedUniversities.includes(row["HE provider"])).map(row => ({
+                const studentFiltered = studentParsed.data
+                  .filter(row => wantedUniversities.includes(row["HE provider"]))
+                  .map(row => ({
                     "HE provider": row["HE provider"]
-                    .replace('the', '')
-                    .replace('University', '')
-                    .replace('of', '')
-                    .replace('College', '')
-                    .replace('Science, Technology and Medicine', '')
-                    .replace('The', '')
-                    .trim(),
-                  "Total": parseFloat(row["Total"].split(',').join('').trim() || 0)
-            }))
+                      .replace('the', '')
+                      .replace('University', '')
+                      .replace('of', '')
+                      .replace('College', '')
+                      .replace('Science, Technology and Medicine', '')
+                      .replace('The', '')
+                      .trim(),
+                    "Total": (row["Total"] || 1)
+                  }))
 
-          parsed.data.filter(row => wantedUniversities.includes(row["HE provider"])).forEach(row => {
-              const shortName = row["HE provider"]
-              .replace('the', '')
-              .replace('University', '')
-              .replace('of', '')
-              .replace('College', '')
-              .replace('Science, Technology and Medicine', '')
-              .replace('The', '')
-              .trim();
+                setStudentData(studentFiltered)
 
-            let studentCount = 0
+                parsed.data
+                  .filter(row => wantedUniversities.includes(row["HE provider"]))
+                  .forEach(row => {
+                    const shortName = row["HE provider"]
+                      .replace('the', '')
+                      .replace('University', '')
+                      .replace('of', '')
+                      .replace('College', '')
+                      .replace('Science, Technology and Medicine', '')
+                      .replace('The', '')
+                      .trim()
 
-            const studentRow = studentFiltered.find(student => student["HE provider"] === shortName)
-            if (studentRow) {
-              studentCount = studentRow["Total"]
-            }
+                    let studentCount = 0
+                    const studentRow = studentFiltered.find(student => student["HE provider"] === shortName)
+                    if (studentRow) {
+                      studentCount = studentRow["Total"]
+                    }
 
-            let energy = 0
-            if (row[selectedEnergyType]) {
-              energy = row[selectedEnergyType]
-            }
+                    let energy = 0;
+                    if (row[selectedEnergyType]) {
+                      energy = row[selectedEnergyType]
+                    }
 
-            let perStudentEnergy = 0 
-            if (studentCount > 0) {
-              perStudentEnergy = energy / studentCount
-            }
+                    let perStudentEnergy = 0
+                    if (studentCount > 0) {
+                      perStudentEnergy = energy / studentCount
+                    }
 
-            yearData[shortName] = perStudentEnergy
-            })
+                    yearData[shortName] = perStudentEnergy
+                  });
 
-           
+                allYearsData.push(yearData);
+                completed++
+                if (completed === years.length) {
+                  setTrendData(allYearsData.sort((a, b) => a.year - b.year));
+                }
+              })
+              
+          } else {
+            parsed.data
+              .filter(row => wantedUniversities.includes(row["HE provider"]))
+              .forEach(row => {
+                const shortName = row["HE provider"]
+                  .replace('the', '')
+                  .replace('University', '')
+                  .replace('of', '')
+                  .replace('College', '')
+                  .replace('Science, Technology and Medicine', '')
+                  .replace('The', '')
+                  .trim()
+
+                let energy = 0
+                if (row[selectedEnergyType]) {
+                  energy = row[selectedEnergyType]
+                }
+                yearData[shortName] = energy
+              });
 
             allYearsData.push(yearData)
-            completed ++ 
+            completed++;
             if (completed === years.length) {
-              setTrendData(allYearsData.sort((a,b) => a.year - b.year))
+              setTrendData(allYearsData.sort((a, b) => a.year - b.year))
             }
-          })
-
-
-
-         } else {
-            parsed.data
-            .filter(row => wantedUniversities.includes(row["HE provider"]))
-            .forEach(row => {
-              const shortName = row["HE provider"].replace('the', '').replace('University', '').replace('of', '').replace('College', '').replace('Science, Technology and Medicine', '').replace('The', '');
-
-              let energy = 0
-
-              if (row[selectedEnergyType]) {
-                energy = row[selectedEnergyType]
-              }
-              yearData[shortName] = energy
-
-              // if (selectedEnergyType === 'Total energy consumption (kWh)' && row["Total energy consumption (kWh)"]) { // much better way done above
-              //   yearData[shortName] = parseFloat(row["Total energy consumption (kWh)"].split(',').join(''));
-              // } else if (selectedEnergyType === 'Total generation of electricity exported to grid (kWh)' && row['Total generation of electricity exported to grid (kWh)']) {
-              //   yearData[shortName] = parseFloat(row["Total generation of electricity exported to grid (kWh)"].split(',').join(''));
-              // } else if (selectedEnergyType === 'Total renewable energy generated onsite or offsite (kWh)' && row['Total renewable energy generated onsite or offsite (kWh)']) {
-              //   yearData[shortName] = parseFloat(row["Total renewable energy generated onsite or offsite (kWh)"].split(',').join(''));
-              // }
-
-            })
-          
-          allYearsData.push(yearData);
-          completed++;
-          
-          // When all years are loaded, sort and set state
-            if (completed === years.length) {
-            allYearsData.sort((a, b) => a.year - b.year);
-            setTrendData(allYearsData);
-            console.log("Trend Data: ", trendData)
           }
-        }
         })
-        .catch((err) => console.error("Error loading CSV:", err));
-    });
-  }, [viewMode, wantedUniversities, selectedEnergyType, perStudent]); // dependencies don't include year as all are selected
+    })
+  }, [viewMode, wantedUniversities, selectedEnergyType, perStudent])
 
   console.log("Data", data) // output data for debugging
 
@@ -237,7 +230,7 @@ function App() {
       <div className="energyGraphingDiv">
       
       <h2>{selectedEnergyType}{perStudent ? "(per Student)" : ""} (2015-2023)</h2>
-      <TrendGraph data = {trendData} ></TrendGraph>
+      <TrendGraph data = {trendData} perStudent = {perStudent}></TrendGraph>
       </div>
       }
 

@@ -1,7 +1,7 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import "./styles/TrendGraph.css";
 
-export default function TrendGraph({ data }) {
+export default function TrendGraph({ data, perStudent }) {
   // {year: 2015, Edinburgh: 123456, Oxford: 234567, ...}
   console.log("Trend Graph called", data)
   // All uni names without year.
