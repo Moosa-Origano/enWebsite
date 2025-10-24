@@ -60,7 +60,7 @@ function App() {
                   .replace('Science, Technology and Medicine', '')
                   .replace('The', '')
                   .trim(),
-                "Total": parseFloat(row["Total"].split(',').join('').trim() || 0)
+                "Total": parseFloat(row["Total"].split(',').join('').trim() || 1)
               }))
 
             setStudentData(studentFiltered)
@@ -85,18 +85,18 @@ function App() {
               return {
                 ...energyRow,
                 [selectedEnergyType]: perStudentEnergy
-              }
-            })
+              };
+            });
 
-            setData(filtered)
+            setData(filtered);
           })
-          .catch((err) => console.error("Error loading student CSV:", err))
+          .catch((err) => console.error("Error loading student CSV:", err));
       } else {
-        setData(filtered)
+        setData(filtered);
       }
     })
-    .catch((err) => console.error("Error loading energy CSV:", err))
-}, [viewMode, year, wantedUniversities, selectedEnergyType, perStudent])
+    .catch((err) => console.error("Error loading energy CSV:", err));
+}, [viewMode, year, wantedUniversities, selectedEnergyType, perStudent]);
 
 
 
@@ -106,17 +106,17 @@ function App() {
   useEffect(() => {
     if (viewMode !== 'trend') return;
 
-    console.log("View Mode: ", viewMode) // output for debugging
-    const years = [15, 16, 17, 18, 19, 20, 21, 22, 23] // the current years of data available.
-    const allYearsData = [] // initialising
-    let completed = 0
+    console.log("View Mode: ", viewMode); // output for debugging
+    const years = [15, 16, 17, 18, 19, 20, 21, 22, 23]; // the current years of data available.
+    const allYearsData = []; // initialising
+    let completed = 0;
 
     years.forEach(y => {
       fetch(`/energyData/20${y}-${y+1}.csv`)
         .then((response) => response.text())
         .then((csvText) => {
-          const parsed = Papa.parse(csvText, { header: true})
-          const yearData = { year: 2000 + y }
+          const parsed = Papa.parse(csvText, { header: true});
+          const yearData = { year: 2000 + y };
 
           if (perStudent) {
             fetch(`/studentData/20${y}-${y + 1}SC.csv`)
@@ -136,10 +136,10 @@ function App() {
                       .replace('Science, Technology and Medicine', '')
                       .replace('The', '')
                       .trim(),
-                    "Total": parseFloat(row["Total"].split(',').join('').trim())
-                  }))
+                    "Total": (parseFloat(row["Total"].split(',').join('').trim()) || 1)
+                  }));
 
-                setStudentData(studentFiltered)
+                setStudentData(studentFiltered);
 
                 parsed.data
                   .filter(row => wantedUniversities.includes(row["HE provider"]))
@@ -153,31 +153,31 @@ function App() {
                       .replace('The', '')
                       .trim()
 
-                    let studentCount = 0
-                    const studentRow = studentFiltered.find(student => student["HE provider"] === shortName)
+                    let studentCount = 0;
+                    const studentRow = studentFiltered.find(student => student["HE provider"] === shortName);
                     if (studentRow) {
-                      studentCount = studentRow["Total"]
+                      studentCount = studentRow["Total"];
                     }
 
-                    let energy = 0
+                    let energy = 0;
                     if (row[selectedEnergyType]) {
-                      energy = parseFloat((row[selectedEnergyType]).split(',').join('').trim())
+                      energy = parseFloat((row[selectedEnergyType]).split(',').join('').trim()) || 0;
                     }
 
-                    let perStudentEnergy = 0
+                    let perStudentEnergy = 0;
                     if (studentCount > 0) {
-                      perStudentEnergy = energy / studentCount
-                    }
+                      perStudentEnergy = energy / studentCount;
+                    };
 
                     yearData[shortName] = perStudentEnergy
                   });
 
                 allYearsData.push(yearData);
-                completed++
+                completed++;
                 if (completed === years.length) {
                   setTrendData(allYearsData.sort((a, b) => a.year - b.year));
                 }
-              })
+              });
               
           } else {
             parsed.data
@@ -192,24 +192,24 @@ function App() {
                   .replace('The', '')
                   .trim()
 
-                let energy = 0
+                let energy = 0;
                 if (row[selectedEnergyType]) {
-                  energy = energy = parseFloat((row[selectedEnergyType]).split(',').join('').trim())
+                  energy = energy = parseFloat((row[selectedEnergyType]).split(',').join('').trim()) || 0;
                 }
-                yearData[shortName] = energy
+                yearData[shortName] = energy;
               });
 
-            allYearsData.push(yearData)
+            allYearsData.push(yearData);
             completed++;
             if (completed === years.length) {
-              setTrendData(allYearsData.sort((a, b) => a.year - b.year))
+              setTrendData(allYearsData.sort((a, b) => a.year - b.year));
             }
           }
         })
     })
-  }, [viewMode, wantedUniversities, selectedEnergyType, perStudent])
+  }, [viewMode, wantedUniversities, selectedEnergyType, perStudent]);
 
-  console.log("Data", data) // output data for debugging
+  console.log("Data", data); // output data for debugging
 
   return (
     <>
