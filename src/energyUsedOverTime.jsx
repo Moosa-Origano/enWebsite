@@ -2,7 +2,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import "./styles/energyUsedOverTime.css";
 
 
-export default function BarGraph({ selectedEnergyType,  data }) {
+export default function BarGraph({ selectedEnergyType,  data, perStudent }) {
 
   console.log("Show total energy: " , selectedEnergyType)
   console.log("DATA" , data)

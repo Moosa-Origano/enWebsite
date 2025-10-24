@@ -20,49 +20,83 @@ function App() {
 
   // Single year choose data. 
   useEffect(() => {
-    if (perStudent) {
-      fetch(`/studentData/20${year}-${year+1}SC.csv`)
-      .then((res) => res.text())
-      .then((studentCSVText) => {
-        const studentParsed = Papa.parse(studentCSVText,{ header:  true })
-        console.log("Show student count: " , studentParsed)
+  if (viewMode !== 'single') return;
 
-        const studentFiltered = studentParsed.studentData.filter(row => wantedUniversities.includes["HE provider"]).map(row => ({
-          "HE provider": row["HE provider"].replace('the', '').replace('University', '').replace('of', '').replace('College', '').replace('Science, Technology and Medicine', '').replace('The', '').trim(),  
-          "Total": parseFloat(row["Total"].split(',').join('').trim())
+  fetch(`/energyData/20${year}-${year + 1}.csv`)
+    .then((response) => response.text())
+    .then((csvText) => {
+      const parsed = Papa.parse(csvText, { header: true });
+      console.log("Show graphed energy type: ", selectedEnergyType);
+
+      let filtered = parsed.data
+        .filter(row => wantedUniversities.includes(row["HE provider"]))
+        .map(row => ({
+          "HE provider": row["HE provider"]
+            .replace('the', '')
+            .replace('University', '')
+            .replace('of', '')
+            .replace('College', '')
+            .replace('Science, Technology and Medicine', '')
+            .replace('The', '')
+            .trim(),
+          [selectedEnergyType]: parseFloat(row[selectedEnergyType].split(',').join('').trim() || 0) // instead of doing them seperately
         }))
 
-        console.log('Show student count' , studentFiltered)
-      })
-    }
+      if (perStudent) {
+        fetch(`/studentData/20${year}-${year + 1}SC.csv`)
+          .then((res) => res.text())
+          .then((studentCSVText) => {
+            const studentParsed = Papa.parse(studentCSVText, { header: true })
+            console.log("Show student count: ", studentParsed)
 
-    if (viewMode !== 'single') { return } // only produce this data when the option is selected
+            const studentFiltered = studentParsed.data
+              .filter(row => wantedUniversities.includes(row["HE provider"]))
+              .map(row => ({
+                "HE provider": row["HE provider"]
+                  .replace('the', '')
+                  .replace('University', '')
+                  .replace('of', '')
+                  .replace('College', '')
+                  .replace('Science, Technology and Medicine', '')
+                  .replace('The', '')
+                  .trim(),
+                "Total": parseFloat(row["Total"].split(',').join('').trim() || 0)
+              }))
 
-    fetch(`/energyData/20${year}-${year+1}.csv`) // fetches the energy data for the chosen year from the folder energyData in public
-      .then((response) => response.text()) // takes the data and converts to text
-      .then((csvText) => { 
-        const parsed = Papa.parse(csvText, { header: true }) // parses the csv file 
-        console.log("Show graphed energy type: " , selectedEnergyType) // outputs that it is single view for debugging
-        const filtered = parsed.data // filtered stores the parsed data that is included in wantedUniversities state, and maps the elements to the chosen energy data for graph creation
-          .filter(row => wantedUniversities.includes(row["HE provider"]))
-          .map(row => ({ // .replace attempts to shorten the university name, so University of Oxford -> Oxford
-            "HE provider": row["HE provider"].replace('the', '').replace('University', '').replace('of', '').replace('College', '').replace('Science, Technology and Medicine', '').replace('The', '').trim(),  
-            ...(selectedEnergyType === 'Total energy consumption (kWh)' && { 
-              "Total energy consumption (kWh)": parseFloat(row["Total energy consumption (kWh)"].split(',').join('').trim())
-            }),
-            ...(selectedEnergyType === 'Total generation of electricity exported to grid (kWh)' && { 
-              "Total generation of electricity exported to grid (kWh)": parseFloat(row["Total generation of electricity exported to grid (kWh)"].split(',').join('').trim())
-            }),
-            ...(selectedEnergyType === 'Total renewable energy generated onsite or offsite (kWh)' && { 
-              "Total renewable energy generated onsite or offsite (kWh)": parseFloat(row["Total renewable energy generated onsite or offsite (kWh)"].split(',').join('').trim())
+            setStudentData(studentFiltered)
+
+            filtered = filtered.map(energyRow => {
+              if (!perStudent) {
+                return energyRow;
+              }
+              const studentRow = studentFiltered.find(student => student["HE provider"] === energyRow["HE provider"])
+              let studentCount = 0;
+              if (studentRow) {
+                studentCount = studentRow["Total"];
+              }
+              let energy = 0;
+              if (energyRow[selectedEnergyType]) {
+                energy = energyRow[selectedEnergyType];
+              }
+              let perStudentEnergy = 0;
+              if (studentCount > 0) {
+                perStudentEnergy = energy / studentCount;
+              }
+              return {
+                ...energyRow,
+                [selectedEnergyType]: perStudentEnergy
+              }
             })
-          }))
 
-        console.log("Filtered: " , filtered); // filtered[0]['HE provider']
-        setData(filtered); 
-      })
-      .catch((err) => console.error("Error loading CSV:", err));
-  }, [viewMode, year, wantedUniversities, selectedEnergyType, perStudent]); // dependencies for rerender
+            setData(filtered)
+          })
+          .catch((err) => console.error("Error loading student CSV:", err))
+      } else {
+        setData(filtered)
+      }
+    })
+    .catch((err) => console.error("Error loading energy CSV:", err))
+}, [viewMode, year, wantedUniversities, selectedEnergyType, perStudent])
 
   // Multi year data 
   useEffect(() => {
@@ -119,16 +153,16 @@ function App() {
       {/*Conditionally rendered if the single bar chart view is wanted */}
       {viewMode === 'single' && 
       <div className="energyGraphingDiv">
-      <h2>{selectedEnergyType} {`(20${year}-20${year+1})`}</h2>
-      <BarGraph selectedEnergyType = {selectedEnergyType} data = {data} ></BarGraph>
+      <h2>{selectedEnergyType}{perStudent ? "(per Student)" : ""} {`(20${year}-20${year+1})`}</h2> {/* Ternary operators are amazing */}
+      <BarGraph selectedEnergyType = {selectedEnergyType} data = {data} perStudent = {perStudent}></BarGraph>
       </div>
       }
       
       {/*Conditionally rendered if the trend view is wanted */}
       {viewMode === 'trend' && 
       <div className="energyGraphingDiv">
-
-      <h2>{selectedEnergyType} (2015-2023)</h2>
+      
+      <h2>{selectedEnergyType}{perStudent ? "(per Student)" : ""} (2015-2023)</h2>
       <TrendGraph data = {trendData} ></TrendGraph>
       </div>
       }
