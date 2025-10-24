@@ -98,6 +98,10 @@ function App() {
     .catch((err) => console.error("Error loading energy CSV:", err))
 }, [viewMode, year, wantedUniversities, selectedEnergyType, perStudent])
 
+
+
+
+
   // Multi year data 
   useEffect(() => {
     if (viewMode !== 'trend') return; 
@@ -106,37 +110,107 @@ function App() {
     const years = [15, 16, 17, 18, 19, 20, 21, 22, 23]; // the current years of data available.
     const allYearsData = []; // initialising
     let completed = 0;
+
     years.forEach(y => { // iterates through the years fetching the data for each and appending to allYearsData. 
       fetch(`/energyData/20${y}-${y+1}.csv`)
         .then((response) => response.text())
         .then((csvText) => {
           const parsed = Papa.parse(csvText, { header: true, dynamicTyping: true });
-      
           const yearData = { year: 2000 + y };
-          
-          parsed.data
+        
+          if (perStudent) {
+            fetch(`/studentData/20${y}-${y+1}SC.csv`)
+            .then((res) => res.text())
+            .then((studentCSVText) => {
+              const studentParsed = Papa.parse(studentCSVText, { header: true, dynamicTyping: true})
+              console.log(`Show student count for 20${y}-${y + 1}: `, studentParsed)
+
+              const studentFiltered = studentParsed.data.filter(row => wantedUniversities.includes(row["HE provider"])).map(row => ({
+                    "HE provider": row["HE provider"]
+                    .replace('the', '')
+                    .replace('University', '')
+                    .replace('of', '')
+                    .replace('College', '')
+                    .replace('Science, Technology and Medicine', '')
+                    .replace('The', '')
+                    .trim(),
+                  "Total": parseFloat(row["Total"].split(',').join('').trim() || 0)
+            }))
+
+          parsed.data.filter(row => wantedUniversities.includes(row["HE provider"])).forEach(row => {
+              const shortName = row["HE provider"]
+              .replace('the', '')
+              .replace('University', '')
+              .replace('of', '')
+              .replace('College', '')
+              .replace('Science, Technology and Medicine', '')
+              .replace('The', '')
+              .trim();
+
+            let studentCount = 0
+
+            const studentRow = studentFiltered.find(student => student["HE provider"] === shortName)
+            if (studentRow) {
+              studentCount = studentRow["Total"]
+            }
+
+            let energy = 0
+            if (row[selectedEnergyType]) {
+              energy = row[selectedEnergyType]
+            }
+
+            let perStudentEnergy = 0 
+            if (studentCount > 0) {
+              perStudentEnergy = energy / studentCount
+            }
+
+            yearData[shortName] = perStudentEnergy
+            })
+
+           
+
+            allYearsData.push(yearData)
+            completed ++ 
+            if (completed === years.length) {
+              setTrendData(allYearsData.sort((a,b) => a.year - b.year))
+            }
+          })
+
+
+
+         } else {
+            parsed.data
             .filter(row => wantedUniversities.includes(row["HE provider"]))
             .forEach(row => {
               const shortName = row["HE provider"].replace('the', '').replace('University', '').replace('of', '').replace('College', '').replace('Science, Technology and Medicine', '').replace('The', '');
 
-              if (selectedEnergyType === 'Total energy consumption (kWh)' && row["Total energy consumption (kWh)"]) {
-                yearData[shortName] = parseFloat(row["Total energy consumption (kWh)"].split(',').join(''));
-              } else if (selectedEnergyType === 'Total generation of electricity exported to grid (kWh)' && row['Total generation of electricity exported to grid (kWh)']) {
-                yearData[shortName] = parseFloat(row["Total generation of electricity exported to grid (kWh)"].split(',').join(''));
-              } else if (selectedEnergyType === 'Total renewable energy generated onsite or offsite (kWh)' && row['Total renewable energy generated onsite or offsite (kWh)']) {
-                yearData[shortName] = parseFloat(row["Total renewable energy generated onsite or offsite (kWh)"].split(',').join(''));
+              let energy = 0
+
+              if (row[selectedEnergyType]) {
+                energy = row[selectedEnergyType]
               }
-            });
+              yearData[shortName] = energy
+
+              // if (selectedEnergyType === 'Total energy consumption (kWh)' && row["Total energy consumption (kWh)"]) { // much better way done above
+              //   yearData[shortName] = parseFloat(row["Total energy consumption (kWh)"].split(',').join(''));
+              // } else if (selectedEnergyType === 'Total generation of electricity exported to grid (kWh)' && row['Total generation of electricity exported to grid (kWh)']) {
+              //   yearData[shortName] = parseFloat(row["Total generation of electricity exported to grid (kWh)"].split(',').join(''));
+              // } else if (selectedEnergyType === 'Total renewable energy generated onsite or offsite (kWh)' && row['Total renewable energy generated onsite or offsite (kWh)']) {
+              //   yearData[shortName] = parseFloat(row["Total renewable energy generated onsite or offsite (kWh)"].split(',').join(''));
+              // }
+
+            })
           
           allYearsData.push(yearData);
           completed++;
           
           // When all years are loaded, sort and set state
-          if (completed === years.length) {
+            if (completed === years.length) {
             allYearsData.sort((a, b) => a.year - b.year);
             setTrendData(allYearsData);
             console.log("Trend Data: ", trendData)
           }
+        }
         })
         .catch((err) => console.error("Error loading CSV:", err));
     });
