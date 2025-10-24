@@ -136,7 +136,7 @@ function App() {
                       .replace('Science, Technology and Medicine', '')
                       .replace('The', '')
                       .trim(),
-                    "Total": (row["Total"] || 1)
+                    "Total": parseFloat(row["Total"].split(',').join('').trim())
                   }))
 
                 setStudentData(studentFiltered)
@@ -159,9 +159,9 @@ function App() {
                       studentCount = studentRow["Total"]
                     }
 
-                    let energy = 0;
+                    let energy = 0
                     if (row[selectedEnergyType]) {
-                      energy = row[selectedEnergyType]
+                      energy = parseFloat((row[selectedEnergyType]).split(',').join('').trim())
                     }
 
                     let perStudentEnergy = 0
@@ -194,7 +194,7 @@ function App() {
 
                 let energy = 0
                 if (row[selectedEnergyType]) {
-                  energy = row[selectedEnergyType]
+                  energy = energy = parseFloat((row[selectedEnergyType]).split(',').join('').trim())
                 }
                 yearData[shortName] = energy
               });
