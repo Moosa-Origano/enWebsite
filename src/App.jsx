@@ -234,7 +234,6 @@ function App() {
       {/*Conditionally rendered if the trend view is wanted */}
       {viewMode === 'trend' && 
       <div className="energyGraphingDiv">
-      
       <h2>{selectedEnergyType}{perStudent ? "(per Student)" : ""} (2015-2023)</h2>
       {/* {wantedUniversities.length === 0 ? <div className='emptyUniversitiesDiv'>No universities chosen</div> : <TrendGraph data = {trendData} perStudent = {perStudent}></TrendGraph>} */}
       <TrendGraph data = {trendData} perStudent = {perStudent}></TrendGraph>
