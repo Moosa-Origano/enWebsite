@@ -37,7 +37,7 @@ export default function TrendGraph({ data, perStudent }) {
         <YAxis />
         {/* tickFormatter={(value) => `${(value / 1_000_000).toFixed(1)}M`} */}
         <Tooltip />
-        <Legend verticalAlign='bottom' align='center'/>
+        {/* <Legend verticalAlign='bottom' align='center' height='20' overflow='hidden'/> */}
         {universities.map((uni, index) => (
           <Line 
             key={uni}
