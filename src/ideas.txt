@@ -1,0 +1,5 @@
+Downloadable charts
+Summary cards showing statistics/changes/comparisons as reference
+Sorting highest/lowest/name
+Fix remove university button - looks off. Maybe use close button from bootstrap.
+Add dark mode
