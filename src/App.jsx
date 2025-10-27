@@ -27,7 +27,7 @@ function App() {
     .then((response) => response.text())
     .then((csvText) => {
       const parsed = Papa.parse(csvText, { header: true });
-      console.log("Show graphed energy type: ", selectedEnergyType);
+      // console.log("Show graphed energy type: ", selectedEnergyType);
 
       let filtered = parsed.data
         .filter(row => wantedUniversities.includes(row["HE provider"]))
@@ -49,7 +49,7 @@ function App() {
           .then((res) => res.text())
           .then((studentCSVText) => {
             const studentParsed = Papa.parse(studentCSVText, { header: true })
-            console.log("Show student count: ", studentParsed)
+            // console.log("Show student count: ", studentParsed)
 
             const studentFiltered = studentParsed.data
               .filter(row => wantedUniversities.includes(row["HE provider"]))
@@ -108,7 +108,7 @@ function App() {
   useEffect(() => {
     if (viewMode !== 'trend') return;
 
-    console.log("View Mode: ", viewMode); // output for debugging
+    // console.log("View Mode: ", viewMode); // output for debugging
     const years = [15, 16, 17, 18, 19, 20, 21, 22, 23]; // the current years of data available.
     const allYearsData = []; // initialising
     let completed = 0;
@@ -128,7 +128,7 @@ function App() {
               .then((res) => res.text())
               .then((studentCSVText) => {
                 const studentParsed = Papa.parse(studentCSVText, { header: true })
-                console.log(`Show student count for 20${y}-${y + 1}: `, studentParsed)
+                // console.log(`Show student count for 20${y}-${y + 1}: `, studentParsed)
 
                 const studentFiltered = studentParsed.data
                   .filter(row => wantedUniversities.includes(row["HE provider"]))
@@ -214,7 +214,7 @@ function App() {
     })
   }, [viewMode, wantedUniversities, selectedEnergyType, perStudent]);
 
-  console.log("Data", data); // output data for debugging
+  // console.log("Data", data); // output data for debugging
 
   return (
     <>

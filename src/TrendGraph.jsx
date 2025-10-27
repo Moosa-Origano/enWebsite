@@ -3,7 +3,7 @@ import "./styles/TrendGraph.css";
 
 export default function TrendGraph({ data, perStudent }) {
   // {year: 2015, Edinburgh: 123456, Oxford: 234567, ...}
-  console.log("Trend Graph called", data)
+  // console.log("Trend Graph called", data)
   // All uni names without year.
   let universities = [];
 
@@ -15,7 +15,7 @@ export default function TrendGraph({ data, perStudent }) {
     }
   }
 
-  console.log('UNIVERSITIES: ' ,  data)
+  // console.log('UNIVERSITIES: ' ,  data)
   
 
   const colors = ['#8884d8', '#82ca9d', '#ffc658', '#ff7c7c', '#8dd1e1', '#d084d0', '#a4de6c', '#ffa07a']; // need to add more colours otherwise will cause an error below
