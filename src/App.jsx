@@ -21,8 +21,9 @@ function App() {
   // Single year choose data. 
   useEffect(() => {
   if (viewMode !== 'single') return;
+  let energyCSV = `${import.meta.env.BASE_URL}energyData/20${year}-${year + 1}.csv`;
 
-  fetch(`/energyData/20${year}-${year + 1}.csv`)
+  fetch(energyCSV)
     .then((response) => response.text())
     .then((csvText) => {
       const parsed = Papa.parse(csvText, { header: true });
@@ -43,7 +44,8 @@ function App() {
         }))
 
       if (perStudent) {
-        fetch(`/studentData/20${year}-${year + 1}SC.csv`)
+        let studentCSV = `${import.meta.env.BASE_URL}studentData/20${year}-${year + 1}SC.csv`;
+        fetch(studentCSV)
           .then((res) => res.text())
           .then((studentCSVText) => {
             const studentParsed = Papa.parse(studentCSVText, { header: true })
@@ -112,14 +114,17 @@ function App() {
     let completed = 0;
 
     years.forEach(y => {
-      fetch(`/energyData/20${y}-${y+1}.csv`)
+      let energyCSV = `${import.meta.env.BASE_URL}energyData/20${y}-${y + 1}.csv`;
+      fetch(energyCSV)
         .then((response) => response.text())
         .then((csvText) => {
           const parsed = Papa.parse(csvText, { header: true});
           const yearData = { year: 2000 + y };
 
           if (perStudent) {
-            fetch(`/studentData/20${y}-${y + 1}SC.csv`)
+            let studentCSV = `${import.meta.env.BASE_URL}studentData/20${y}-${y + 1}SC.csv`;
+
+            fetch(studentCSV)
               .then((res) => res.text())
               .then((studentCSVText) => {
                 const studentParsed = Papa.parse(studentCSVText, { header: true })
