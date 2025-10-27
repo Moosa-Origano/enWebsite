@@ -68,12 +68,14 @@
 /* The elements that show which universities have been chosen + delete buttons to remove them */
 .removeUniversities {
     font-size: 17px;
+    font-family: Product Sans;
+
 
     display: inline-flex;
     justify-content: center;
     align-items: center;
 
-    background: rgba(0, 164, 255, .2);
+    background-color: #8ecae6;
 
     border-radius: 3px;
     border-radius: 20px;
@@ -90,9 +92,9 @@
 .removeUniversitiesButton, .removeUniversitiesButton:hover  {
     /* color: rgb(246, 245, 245);
     background-color: rgb(246, 245, 245)  ; */
-    background-color: rgba(0, 166, 255, 0.1);
-
-    font-size: 17px;
+    font-family: Product Sans;
+    background-color: #8ecae6;
+    font-size: 11px;
 
     height: 20px;
     width: 20px;
@@ -112,9 +114,10 @@
 
 .removeUniversitiesButton:hover {
     cursor: pointer   ;
+    background-color: #219ebc;
+
     box-shadow: 1px 1px lightblue;
-    background: rgba(0, 164, 255, .3);
-    font-size: 18px;
+    font-size: 13px;
 
 }
 

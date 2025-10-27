@@ -1,6 +1,7 @@
 import "./styles/uniList.css"
 import { useState } from 'react' 
 
+
  const universities = [
   "The University of Aberdeen",
   "Abertay University",
@@ -181,7 +182,7 @@ export default function UniListSearch( { wantedUniversities, setWantedUniversiti
       </div>
 
       <div id="listContainer">
-      {wantedUniversities.map(uni =><div className="removeUniversities" key={uni}>{uni}<button class ="removeUniversitiesButton" onClick = {() => setWantedUniversities(wantedUniversities.filter(uniName => uniName !== uni))}>x</button> </div> )}
+      {wantedUniversities.map(uni =><div className="removeUniversities" key={uni}>{uni}<button class ="removeUniversitiesButton" onClick = {() => setWantedUniversities(wantedUniversities.filter(uniName => uniName !== uni))}>X</button> </div> )}
       </div>
 
       <button onClick={() => setWantedUniversities([])} >Clear All</button>

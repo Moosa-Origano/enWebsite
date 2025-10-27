@@ -2,4 +2,9 @@ body {
   background-color: rgb(232, 229, 229);
 }
 
-
+/* 
+* {
+  background-color: black !important;
+  color: white !important;
+  box-shadow: none !important;
+} */
